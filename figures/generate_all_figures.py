@@ -25,7 +25,7 @@ FIGS_DIR = OUTPUT_DIR
 # Fig 0: System architecture diagram
 # ============================================================
 def draw_architecture_diagram():
-    """Draw three-layer closed-loop system architecture diagram"""
+    """Draw three-layer feedback system architecture diagram"""
     fig, ax = plt.subplots(1, 1, figsize=(12, 5))
     ax.set_xlim(0, 12)
     ax.set_ylim(0, 5)
@@ -81,7 +81,7 @@ def draw_architecture_diagram():
     draw_box(ax, 8.5, 1.8, 3.2, 2.8, colors['exec'],
              'Execution Layer', [
                  '5× Piezo Actuator Array',
-                 'CS40L25 Closed-loop Driver',
+                 'CS40L25 Feedback Driver',
                  'Phase-difference Localization',
                  '→ Real-time Force Feedback',
              ], alpha=0.12)
@@ -135,7 +135,7 @@ def draw_architecture_diagram():
     path = FIGS_DIR / 'fig0_architecture.png'
     fig.savefig(path, dpi=200, bbox_inches='tight')
     plt.close(fig)
-    print(f'  ✓ Architecture diagram saved: {path.name}')
+    print(f'  [OK] Architecture diagram saved: {path.name}')
     return path
 
 
@@ -229,12 +229,12 @@ def draw_force_haptic_mapping():
     path = FIGS_DIR / 'fig1_force_haptic_mapping.png'
     fig.savefig(path, dpi=200, bbox_inches='tight')
     plt.close(fig)
-    print(f'  \u2713 Force-haptic mapping saved: {path.name}')
+    print(f'  [OK] Force-haptic mapping saved: {path.name}')
 
     # Print performance metrics
     print(f'    Latency: {dt*1000:.2f} ms')
     print(f'    Force resolution: {force_resolution:.2f} N')
-    print(f'    Distinguishable effects: \u22658 types')
+    print(f'    Distinguishable effects: >= 8 types')
     return path
 
 
@@ -251,15 +251,15 @@ def draw_speckle_tracking():
     frames = []
     param_list = []
 
+    # Generate base speckle markers once (same set for all frames)
+    base_points = []
+    for _ in range(60):
+        x = np.random.randint(50, frame_size[1] - 50)
+        y = np.random.randint(50, frame_size[0] - 50)
+        base_points.append((x, y))
+
     for i in range(30):
         frame = np.zeros(frame_size, dtype=np.uint8)
-
-        # Base speckle markers (random positions + simulated press deformation offset)
-        base_points = []
-        for _ in range(60):
-            x = np.random.randint(50, frame_size[1] - 50)
-            y = np.random.randint(50, frame_size[0] - 50)
-            base_points.append((x, y))
 
         # Add deformation displacement (simulate press, larger displacement near center)
         cx, cy = frame_size[1] // 2, frame_size[0] // 2
@@ -342,7 +342,7 @@ def draw_speckle_tracking():
     path = FIGS_DIR / 'fig2_speckle_tracking.png'
     fig.savefig(path, dpi=200, bbox_inches='tight')
     plt.close(fig)
-    print(f'  ✓ Speckle tracking result saved: {path.name}')
+    print(f'  [OK] Speckle tracking result saved: {path.name}')
     return path
 
 

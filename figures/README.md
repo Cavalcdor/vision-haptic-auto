@@ -1,23 +1,19 @@
 # vision-haptic-auto 图表说明
 
-本目录用于存放论文相关的图表资源。
+本目录存放论文所用图表。
 
-## 建议图表清单
+## 已生成图表
 
-### 1. 系统架构图 (`system-architecture/`)
-- 三层闭环架构框图：感知层 → 决策层 → 执行层
-- 标注各层关键技术
+| 文件名 | 内容 |
+|--------|------|
+| `fig0_architecture.png` | 系统三层反馈架构框图 |
+| `fig1_force_haptic_mapping.png` | 力度-触感映射仿真曲线（3子图） |
+| `fig2_speckle_tracking.png` | 散斑追踪仿真结果（6子图） |
 
-### 2. 算法流程图 (`algorithm-flow/`)
-- 感知层信号处理流程：图像采集 → 去噪 → 标记点检测 → 光流追踪 → 参数输出
-- 决策层映射逻辑：力度输入 → 阶段判断 → 触觉指令生成
+## 批量生图
 
-### 3. 性能指标表 (`performance-table/`)
-- 见论文第四章的性能指标对照表
+运行本目录下的 `generate_all_figures.py` 可一键重新生成全部图表。
 
----
-
-## 制作工具建议
-- 系统架构图：draw.io / Figma / PowerPoint
-- 算法流程图：draw.io / Mermaid
+## 制作工具
+- 架构图：Matplotlib
 - 数据图表：MATLAB / Python Matplotlib

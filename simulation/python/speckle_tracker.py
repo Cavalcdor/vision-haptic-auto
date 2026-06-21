@@ -109,20 +109,23 @@ def main():
 
     # Simulate synthetic image sequence
     frame_size = (640, 480)
+    np.random.seed(42)
+    # Pre-generate marker positions once
+    marker_positions = [(np.random.randint(0, frame_size[1]),
+                         np.random.randint(0, frame_size[0]))
+                        for _ in range(50)]
+
     for i in range(100):
         # Generate synthetic speckle image
         frame = np.zeros(frame_size, dtype=np.uint8)
-        # Simulate speckle markers
-        np.random.seed(42)
-        for _ in range(50):
-            x = np.random.randint(0, frame_size[1])
-            y = np.random.randint(0, frame_size[0])
+        # Draw pre-generated markers
+        for x, y in marker_positions:
             cv2.circle(frame, (x, y), 3, 255, -1)
 
         params = tracker.process_frame(frame)
         if i % 10 == 0:
             print(f"Frame {i:3d}: Force={params.force:.2f}N, "
-                  f"Area={params.area:.2f}mm², "
+                  f"Area={params.area:.2f}mm2, "
                   f"Velocity={params.velocity:.4f}mm/s, "
                   f"Position=({params.position[0]:.1f}, {params.position[1]:.1f})mm")
 
