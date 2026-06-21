@@ -78,13 +78,14 @@ vision-haptic-auto/
 
 ## 参考文献
 
-1. Li R, et al. *GelSight: A tactile sensing system for robotics*. IEEE RAM, 2014.
-2. TDK Corporation. *PowerHap Piezo Actuators for Automotive Applications*, 2025.
-3. Cirrus Logic. *CS40L51 Closed-Loop Haptic Driver Datasheet*, 2025.
-4. BeStar Technologies. *Automotive Touchscreen Haptic Feedback Solutions*, 2025.
-5. Zhai S, et al. *In-vehicle touchscreen haptic feedback using under-display camera*. JICV, 2025.
-6. 北航团队. *透明触觉电子皮肤研究*. Advanced Science, 2024.
-7. 中国汽车工业协会. *智能座舱发展趋势白皮书*, 2025.
+1. 中国汽车工业协会. *中国智能座舱产业发展研究报告*, 2024.
+2. Lee J D, Young K L, Regan M A. Defining driver distraction. In *Driver Distraction: Theory, Effects, and Mitigation*, CRC Press, 2008.
+3. Petermeijer S M, Abbink D A, Mulder M. Haptic feedback in automotive interfaces: A systematic review. *IEEE Trans. on Haptics*, 8(2), 2015.
+4. TDK Corporation. *PowerHap: Piezoelectric Actuators for Haptic Applications*, 2020.
+5. Cirrus Logic. *CS40L25: Piezo Haptic Driver Datasheet*, 2023.
+6. Luo S, et al. Robotic tactile sensing for industrial applications. *IEEE Trans. on Industrial Informatics*, 14(2), 2017.
+7. Li R, Adelson E H. A GelSight tactile sensor for robotic applications. *IEEE/RSJ IROS*, 2013.
+8. Shimonomura K. Tactile image sensors employing camera: A review. *Sensors*, 19(19), 2019.
 
 ---
 
