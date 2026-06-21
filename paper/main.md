@@ -1,71 +1,74 @@
-# Force Feedback System for Smart Vehicle Touchscreens Based on Vision-Haptic Sensing
+# 基于视触觉感知的智能汽车触控屏力觉反馈系统设计
 
 <div class="no-number">
-**Abstract**: The full touchscreen transition in smart vehicle cockpits forces drivers to divert their eyes from the road due to the lack of physical tactile cues, leading to distraction and safety risks. This paper proposes a vision-haptic force feedback system for automotive touchscreens: an under-display camera captures elastic deformation images, combined with speckle marker detection and optical flow tracking to extract four-dimensional parameters (force, contact area, velocity, and position). A force-haptic mapping model and scene-adaptive strategy drive a piezoelectric actuator array to generate differentiated real-time feedback. The system adopts a three-layer closed-loop architecture (Perception–Decision–Execution), targeting force resolution ≤0.05N, latency <10ms, and ≥8 distinguishable haptic effects.
 
-**Keywords**: Vision-based tactile sensing; force feedback; smart vehicle; touchscreen; piezoelectric actuator
+**摘要**：智能汽车交互界面全面触屏化使驾驶员因缺乏物理触觉线索被迫转移视线，导致驾驶分心与安全隐患。本文提出一种基于视触觉感知的车载力觉反馈系统：通过屏下摄像头捕捉形变图像，结合标记点检测与光流追踪，提取力度、面积、速度和位置四维参数；基于映射模型与场景策略驱动压电阵列产生差异化反馈。系统构建"感知-决策-执行"三层闭环架构，预期实现力度分辨率≤0.05N、延迟<10ms、可区分效果≥8种。
 
-## Introduction
+**关键词**：视触觉传感；力觉反馈；智能汽车；触控屏；压电执行器
 
-### Industrial Background
+</div>
 
-Smart vehicle cockpits are transitioning from physical buttons to large touchscreens. Following Tesla Model 3's removal of physical center console buttons, numerous brands have followed suit. Touchscreens have become the primary HMI for smart cockpits[1], hosting dozens of functions including navigation, HVAC, and entertainment.
+## 引言
 
-### Key Challenges
+### 产业背景
 
-The smooth glass surface of touchscreens lacks the tactile cues of physical buttons, forcing drivers to visually confirm operation positions. Even a 1–2 second glance means dozens of meters of "blind driving" at highway speeds. Lee et al. identified driver distraction as a leading cause of traffic accidents[2]. Key challenges include: increased risk from visual dependence, accidental touches on rough roads, degraded usability with gloves or glare, and lack of immediate physical confirmation.
+智能汽车座舱正从物理按键转向触控大屏。特斯拉Model 3率先取消中控物理按键后，各品牌纷纷跟进，触控屏已成为智能座舱的核心交互界面[1]，承载导航、空调、娱乐等数十项功能。
 
-### Limitations of Existing Solutions
+### 核心痛点
 
-Current automotive touchscreens use PCAP technology, outputting only 2D coordinates without force sensing. For haptics, LRA vibrators have >50ms latency and single-mode output[3]. While piezoelectric haptics offer fast response, existing implementations remain open-loop — triggering preset waveforms by touch location — without real-time closed-loop perception-feedback control.
+触控屏光滑表面无法提供物理按键触觉线索，驾驶员须用眼确认操作位置，导致视线离开道路。即使仅持续1~2秒，在高速下也意味着数十米"盲驾"距离。Lee等人指出，驾驶分心是交通事故主要诱因之一[2]。当前车载触控交互的痛点包括：操作依赖视觉确认增加风险、颠簸路面易误触、手套/强光环境下可用性下降、缺乏即时物理确认。
 
-### Objective
+### 现有方案的不足
 
-This paper aims to design an intelligent instrument system that senses four-dimensional parameters (force, area, velocity, position) and generates differentiated force feedback in real time.
+车载触控屏采用PCAP技术，仅输出二维坐标，无法感知力度。触觉反馈方面，LRA振动延迟>50ms且模式单一[3]。虽有压电触觉技术可实现快速响应，但现有方案限于"位置触发预设波形"的开环模式，尚未实现感知-反馈的实时闭环。
 
+### 本文目标
 
-## State of the Art
+本文旨在设计一套感知力度、面积、速度、位置四维信息并据此产生差异化力觉反馈的智能仪器系统。
 
-### Automotive Touchscreen Technology
+## 技术现状
 
-Automotive touchscreens employ PCAP technology, detecting touch coordinates via capacitance changes at intersection points. While mature and reliable, output is limited to (x,y) coordinates without force information. Some solutions add a pressure-sensitive layer, but at higher cost and reduced optical transmittance.
+### 车载触控屏技术
 
-### Haptic Feedback Technology
+车载触控屏采用PCAP技术，通过感应交叉点电容变化定位触摸坐标。该技术成熟可靠，但输出仅限于(x,y)坐标，不含力度信息。部分方案引入压力感应层，但成本高且降低屏幕透光率。
 
-**Linear Resonant Actuators (LRA)** drive a mass-spring system at resonance, with >50ms latency and single waveform output[3].
+### 触觉反馈技术
 
-**Piezoelectric haptic feedback** relies on the inverse piezoelectric effect — applying voltage to deform piezoelectric ceramics. Performance comparison is shown in Table 1.
+**线性谐振马达（LRA）** 驱动质量块谐振产生振动，延迟>50ms，波形单一[3]。
 
-**Table 1 LRA vs. Piezoelectric Actuator Comparison**
+**压电触觉反馈** 基于逆压电效应，通过施加电压使压电陶瓷形变产生振动，性能对比见表1。
 
-| Parameter | LRA | Piezoelectric |
-|-----------|-----|---------------|
-| Response time | >50ms | <3ms |
-| Frequency range | Narrow (near resonance) | Wide (1Hz–1kHz) |
-| Max acceleration | <10g | >50g |
-| Localized feedback | Not possible | Feasible |
-| Operating temperature | –20°C~+60°C | –40°C~+85°C |
+**表1 LRA与压电触觉反馈方案对比**
 
-Representative products include TDK PowerHap piezoelectric actuators[4] and Cirrus Logic CS40L25 driver IC[5].
+| 性能参数 | LRA | 压电执行器 |
+|---------|-----|-----------|
+| 响应时间 | >50ms | <3ms |
+| 频率范围 | 窄（谐振频率附近） | 宽（1Hz~1kHz） |
+| 最大加速度 | <10g | >50g |
+| 局部化反馈 | 不可局部 | 可局部 |
+| 工作温度 | -20°C~+60°C | -40°C~+85°C |
 
-### Vision-Haptic Sensing Technology
+代表产品有TDK PowerHap压电执行器[4]和Cirrus CS40L25驱动芯片[5]。
 
-Vision-based tactile sensing uses elastomer deformation as a "tactile signal carrier," recovering contact parameters through optical imaging and vision algorithms[6]. MIT's GelSight, employing a reflective-coated elastomer with an embedded camera, achieves micron-level spatial resolution and milliNewton force precision[7]. Camera-based tactile sensors excel in miniaturization and resolution[8], with current applications primarily in industrial inspection and robotic grasping, while automotive HMI applications are still emerging.
+### 视触觉传感技术
 
-### Summary of Limitations
+视触觉传感以弹性体形变为"触觉信号载体"，经光学成像与视觉算法反演接触量[6]。MIT的GelSight以涂覆反射层的弹性体与内置摄像头实现微米级分辨率与毫牛级力精度[7]。基于相机的触觉传感器在小型化与分辨率上优势突出[8]，目前主要应用于工业检测与机器人抓握，车载领域尚处探索。
 
-| Layer | Limitation | Consequence |
-|-------|-----------|-------------|
-| Perception | Position only, no force sensing | Cannot "feel" press force |
-| Decision | Open-loop table lookup, no real-time adaptation | Imprecise feedback timing |
-| Execution | High-performance actuators without quality input | Monotonous haptic experience |
+### 现有方案不足总结
 
+| 层面 | 不足 | 后果 |
+|------|------|------|
+| 感知层 | 仅输出位置信息，缺乏力度参数 | "感受不到"按压力度 |
+| 决策层 | 开环查表触发波形，无实时联动 | "算不精准"反馈时机 |
+| 执行层 | 虽有高性能执行器，缺高质量输入 | "反馈单一"触觉体验 |
 
 ## 方案设计
 
 ### 总体架构
 
 本系统采用"感知层→决策层→执行层"三层闭环架构：感知层捕获形变图像并提取参数；决策层依据映射模型与策略生成指令；执行层驱动压电阵列产生力觉反馈。核心创新在于视触觉传感与压电执行器的闭环耦合。
+
+![系统架构框图](../figures/fig0_architecture.png "图0 系统三层闭环架构")
 
 ### 感知层：视触觉传感器设计
 
@@ -144,15 +147,21 @@ $$
 
 1. **光学仿真**：使用Zemax或相似工具仿真屏下成像光路，验证标记点成像质量
 2. **算法仿真**：利用已开发的MATLAB力度-触感映射程序和Python散斑追踪程序运行生成结果：
-   （此处插入图1：力度-触感映射曲线——由 `simulation/matlab/force_haptic_mapping.m` 运行生成）
-   - (此处插入图2：散斑追踪效果——由 `simulation/python/speckle_tracker.py` 运行生成)
+
+   ![力度-触感映射曲线](../figures/fig1_force_haptic_mapping.png "图1 力度-触感智能映射算法仿真结果")
+
+   **图1 力度-触感映射仿真结果**：子图(a)为按压力度曲线，标注了按压/保持/释放三阶段及阈值线；子图(b)为对应的触觉振动幅值输出；子图(c)为力度-振动幅值映射关系，清晰展示了阈值触发处的脉冲峰值。
+
+   ![散斑追踪效果](../figures/fig2_speckle_tracking.png "图2 散斑标记点追踪仿真结果")
+
+   **图2 散斑追踪仿真结果**：子图(a)(b)(c)分别为初始状态、按压最大形变、释放阶段的散斑图像；子图(d)(e)(f)为光流算法提取的力度、接触面积和按压速度随时间的变化曲线，验证了方案的四维参数提取能力。
 3. **模拟驾驶实验**：搭建模拟驾驶环境，对比有/无力觉反馈条件下驾驶员的触控操作表现
 
 ---
 
 ## 总结
 
-本文针对车载触控操作的安全痛点，提出了基于视触觉感知的力觉反馈系统方案，构建了"感知-决策-执行"闭环架构。方案将视触觉传感迁移至车载交互场景，从单一位置感知拓展至力度、面积、速度四维，通过分段映射函数实现差异化反馈，在MATLAB和Python平台上完成了核心算法仿真（结果见图1、图2）。
+本文针对车载触控操作的安全痛点，提出了基于视触觉感知的力觉反馈系统方案，构建了"感知-决策-执行"闭环架构（见图0）。方案将视触觉传感迁移至车载交互场景，从单一位置感知拓展至力度、面积、速度四维，通过分段映射函数实现差异化反馈，并在MATLAB和Python平台上完成了核心算法仿真，验证了力度-触感映射模型（见图1）和散斑追踪参数提取方法（见图2）的可行性。
 
 未来工作可探索：深度学习形变反演提升精度；多指独立反馈策略；与驾驶员状态监测系统联动。
 
