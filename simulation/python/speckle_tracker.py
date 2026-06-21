@@ -41,12 +41,14 @@ class SpeckleTracker:
         contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # 提取标记点中心
-        points = np.array([
-            [cx, cy] for cnt in contours
-            if (M := cv2.moments(cnt))['m00'] > 0
-            and (cx := int(M['m10'] / M['m00'])) is not None
-            and (cy := int(M['m01'] / M['m00'])) is not None
-        ], dtype=np.float32)
+        points_list = []
+        for cnt in contours:
+            M = cv2.moments(cnt)
+            if M['m00'] > 0:
+                cx = int(M['m10'] / M['m00'])
+                cy = int(M['m01'] / M['m00'])
+                points_list.append([cx, cy])
+        points = np.array(points_list, dtype=np.float32)
 
         if len(points) < 3:
             return TactileParameters(0.0, 0.0, 0.0, (0.0, 0.0))
@@ -79,7 +81,7 @@ class SpeckleTracker:
         self.prev_points = points
         self.prev_gray = gray
 
-        return TacticalParameters(
+        return TactileParameters(
             force=round(force / self.force_resolution) * self.force_resolution,
             area=round(area, 2),
             velocity=round(velocity, 4),
