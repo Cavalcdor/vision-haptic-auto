@@ -1,6 +1,6 @@
 """
 vision-haptic-auto: Optical Flow Based Tactile Parameter Extraction
-基于光流追踪的视触觉参数提取仿真
+Tactile parameter extraction simulation using optical flow tracking
 """
 
 import numpy as np
@@ -11,15 +11,15 @@ from typing import Tuple, Optional
 
 @dataclass
 class TactileParameters:
-    """触觉四维参数"""
-    force: float          # 力度 (N)
-    area: float           # 接触面积 (mm²)
-    velocity: float       # 按压速度 (mm/s)
-    position: Tuple[float, float]  # 位置 (mm, mm)
+    """Four-dimensional tactile parameters"""
+    force: float          # Force (N)
+    area: float           # Contact area (mm²)
+    velocity: float       # Press velocity (mm/s)
+    position: Tuple[float, float]  # Position (mm, mm)
 
 
 class SpeckleTracker:
-    """散斑标记点光流追踪器"""
+    """Speckle marker optical flow tracker"""
 
     def __init__(self, force_resolution: float = 0.05):
         self.force_resolution = force_resolution
@@ -28,19 +28,19 @@ class SpeckleTracker:
 
     def process_frame(self, frame: np.ndarray) -> TactileParameters:
         """
-        处理单帧图像，提取触觉参数
+        Process a single frame and extract tactile parameters
         Args:
-            frame: 输入图像 (grayscale)
+            frame: Input image (grayscale)
         Returns:
-            TactileParameters: 四维触觉参数
+            TactileParameters: Four-dimensional tactile parameters
         """
         gray = cv2.GaussianBlur(frame, (5, 5), 0)
 
-        # 检测标记点
+        # Detect marker points
         _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # 提取标记点中心
+        # Extract marker centers
         points_list = []
         for cnt in contours:
             M = cv2.moments(cnt)
@@ -53,7 +53,7 @@ class SpeckleTracker:
         if len(points) < 3:
             return TactileParameters(0.0, 0.0, 0.0, (0.0, 0.0))
 
-        # 光流追踪
+        # Optical flow tracking
         if self.prev_points is not None and self.prev_gray is not None:
             new_points, status, _ = cv2.calcOpticalFlowPyrLK(
                 self.prev_gray, gray, self.prev_points, None,
@@ -71,13 +71,13 @@ class SpeckleTracker:
         else:
             mean_disp = 0.0
 
-        # 参数反演（简化模型）
+        # Parameter inversion (simplified model)
         force = self._displacement_to_force(mean_disp)
         area = self._estimate_contact_area(contours, points)
-        velocity = mean_disp  # 帧间位移近似速度
+        velocity = mean_disp  # Inter-frame displacement approximates velocity
         position = np.mean(points, axis=0) if len(points) > 0 else (0.0, 0.0)
 
-        # 更新状态
+        # Update state
         self.prev_points = points
         self.prev_gray = gray
 
@@ -89,30 +89,30 @@ class SpeckleTracker:
         )
 
     def _displacement_to_force(self, displacement: float) -> float:
-        """位移-力度线性模型（简化）"""
-        return displacement * 0.1  # 比例系数需标定
+        """Linear displacement-to-force model (simplified)"""
+        return displacement * 0.1  # Scale factor needs calibration
 
     def _estimate_contact_area(self, contours, points) -> float:
-        """基于标记点分布估计接触面积"""
+        """Estimate contact area from marker distribution"""
         if len(points) < 3:
             return 0.0
         hull = cv2.convexHull(points.astype(np.float32))
-        return cv2.contourArea(hull) * 0.01  # 像素→mm²（需标定）
+        return cv2.contourArea(hull) * 0.01  # Pixel to mm² (needs calibration)
 
 
 def main():
-    """仿真主函数"""
-    print("Vision-Haptic-Auto: 视触觉参数提取仿真")
+    """Main simulation function"""
+    print("Vision-Haptic-Auto: Tactile Parameter Extraction Simulation")
     print("=" * 50)
 
     tracker = SpeckleTracker(force_resolution=0.05)
 
-    # 模拟合成图像序列
+    # Simulate synthetic image sequence
     frame_size = (640, 480)
     for i in range(100):
-        # 生成合成散斑图像
+        # Generate synthetic speckle image
         frame = np.zeros(frame_size, dtype=np.uint8)
-        # 模拟散斑标记点
+        # Simulate speckle markers
         np.random.seed(42)
         for _ in range(50):
             x = np.random.randint(0, frame_size[1])
@@ -126,7 +126,7 @@ def main():
                   f"Velocity={params.velocity:.4f}mm/s, "
                   f"Position=({params.position[0]:.1f}, {params.position[1]:.1f})mm")
 
-    print("\n仿真完成。")
+    print("\nSimulation complete.")
 
 
 if __name__ == "__main__":

@@ -1,85 +1,85 @@
-% vision-haptic-auto: 力度-触感映射算法仿真
+% vision-haptic-auto: Force-to-Haptic Mapping Simulation
 % Force-to-Haptic Mapping Simulation (MATLAB)
 
 clear; clc; close all;
 
-fprintf('Vision-Haptic-Auto: 力度-触感映射仿真\n');
+fprintf('Vision-Haptic-Auto: Force-to-Haptic Mapping Simulation\n');
 fprintf('========================================\n\n');
 
-%% 参数配置
-force_resolution = 0.05;   % 力度分辨率 (N)
-force_range = [0.1, 10.0]; % 力度范围 (N)
-threshold = 1.5;           % 段落感触发阈值 (N)
-dt = 0.001;                % 仿真时间步长 (s)
+%% Parameter Configuration
+force_resolution = 0.05;   % Force resolution (N)
+force_range = [0.1, 10.0]; % Force range (N)
+threshold = 1.5;           % Snap-through trigger threshold (N)
+dt = 0.001;                % Simulation time step (s)
 
-%% 模拟按压过程
-t_press = 0:dt:0.3;        % 按压阶段 300ms
-t_hold  = 0.3:dt:0.8;      % 保持阶段 500ms
-t_release = 0.8:dt:1.0;    % 释放阶段 200ms
+%% Simulate Press Process
+t_press = 0:dt:0.3;        % Press phase 300ms
+t_hold  = 0.3:dt:0.8;      % Hold phase 500ms
+t_release = 0.8:dt:1.0;    % Release phase 200ms
 
-% 力度曲线
-f_press = 2.0 * (t_press / 0.3).^0.5;           % 按压（非线性增长）
-f_hold  = 2.0 * ones(size(t_hold));               % 保持
-f_release = 2.0 * (1 - (t_release - 0.8) / 0.2).^2; % 释放（衰减）
+% Force curve
+f_press = 2.0 * (t_press / 0.3).^0.5;           % Press (nonlinear growth)
+f_hold  = 2.0 * ones(size(t_hold));               % Hold
+f_release = 2.0 * (1 - (t_release - 0.8) / 0.2).^2; % Release (decay)
 
 t = [t_press, t_hold, t_release];
 force = [f_press, f_hold, f_release];
 
-%% 力度-触感映射
+%% Force-to-Haptic Mapping
 vibration = zeros(size(force));
 
 for i = 1:length(force)
     f = force(i);
 
     if f < 0.05
-        % 无接触
+        % No contact
         vibration(i) = 0;
     elseif f < threshold
-        % 按压阶段：轻振模拟行程感
+        % Press phase: light vibration simulates travel feel
         vibration(i) = 0.2 * (f / threshold);
     elseif abs(f - threshold) < 0.01
-        % 阈值触发：强脉冲模拟段落感
+        % Threshold trigger: strong pulse simulates snap-through
         vibration(i) = 1.0;
     elseif f >= threshold && i < find(force < threshold * 0.5, 1, 'last')
-        % 保持阶段：持续微振，力度越大振动越强
+        % Hold phase: sustained vibration proportional to force
         vibration(i) = 0.3 + 0.2 * (f - threshold) / (force_range(2) - threshold);
     else
-        % 释放阶段：衰减振荡模拟回弹感
+        % Release phase: decaying oscillation simulates rebound
         vibration(i) = 0.5 * exp(-5 * (f / threshold));
     end
 
-    % 叠加场景自适应（以虚拟按钮为例）
+    % Scene-adaptive overlay (virtual button example)
     if f >= threshold && vibration(i) > 0
-        % 短脉冲"咔哒"感
+        % Short pulse "click" feel
         vibration(i) = vibration(i) * (1 + 0.3 * exp(-(f - threshold)^2 / 0.01));
     end
 end
 
-%% 绘制结果
+%% Plot Results
 figure('Position', [100, 100, 900, 400]);
 
 subplot(1,3,1);
 plot(t, force, 'b-', 'LineWidth', 1.5);
 hold on;
-yline(threshold, 'r--', '阈值', 'LineWidth', 1);
-xlabel('时间 (s)'); ylabel('力度 (N)');
-title('力度曲线'); grid on;
+yline(threshold, 'r--', 'Threshold', 'LineWidth', 1);
+xlabel('Time (s)'); ylabel('Force (N)');
+title('Force Curve'); grid on;
 
 subplot(1,3,2);
 plot(t, vibration, 'r-', 'LineWidth', 1.5);
-xlabel('时间 (s)'); ylabel('振动幅值');
-title('触觉映射输出'); grid on;
+xlabel('Time (s)'); ylabel('Amplitude');
+title('Haptic Output'); grid on;
 
 subplot(1,3,3);
 plot(force, vibration, 'k-', 'LineWidth', 1.5);
-xlabel('力度 (N)'); ylabel('振动幅值');
-title('力度-触感映射关系'); grid on;
+xlabel('Force (N)'); ylabel('Amplitude');
+title('Force-Haptic Mapping'); grid on;
 
-sgtitle('力度-触感智能映射算法仿真');
+sgtitle('Force-to-Haptic Intelligent Mapping Simulation');
 
-%% 性能指标输出
+%% Performance Metrics Output
 latency = dt * 1000;  % ms
-fprintf('延迟: %.2f ms\n', latency);
-fprintf('力度分辨率: %.2f N\n', force_resolution);
-fprintf('可区分触觉效果: ≥8 种\n');
-fprintf('\n仿真完成。\n');
+fprintf('Latency: %.2f ms\n', latency);
+fprintf('Force resolution: %.2f N\n', force_resolution);
+fprintf('Distinguishable haptic effects: \u22658 types\n');
+fprintf('\nSimulation complete.\n');
