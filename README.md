@@ -1,88 +1,88 @@
 # vision-haptic-auto
 
-## Research And Development Of Smart Instruments Course Personal Project
+## Proyecto Personal del Curso de Investigación y Desarrollo de Instrumentos Inteligentes
 
-### 基于视触觉感知的智能汽车触控屏力觉反馈系统设计
-
----
-
-## 项目简介
-
-本项目为《智能仪器设计与制造》课程大作业，选题类型为**创新设计类**。
-
-针对智能汽车全面触屏化背景下驾驶员因缺乏触觉反馈而被迫依赖视觉确认、导致驾驶分心与安全隐患的问题，设计一套基于视触觉感知的智能汽车触控屏力觉反馈系统。
-
-### 设计创新
-
-1. **场景创新**：将视触觉传感技术从工业检测迁移至车载交互场景
-2. **功能创新**：感知维度从"位置"拓展为"力度+面积+速度+位置"四维信息
-3. **系统创新**：构建"感知层 → 决策层 → 执行层"完整反馈架构
-
-### 系统架构
-
-```
-感知层：屏下微型摄像头 + 弹性体散斑标记 → 四维力触觉感知
-   ↓
-决策层：力度-触感映射算法 + 场景自适应策略
-   ↓
-执行层：压电执行器阵列 + 反馈控制驱动 → 差异化力觉反馈
-```
+### Diseño de un Sistema de Retroalimentación de Fuerza Háptica para Pantallas Táctiles de Vehículos Inteligentes Basado en Percepción Visotáctil
 
 ---
 
-## 仓库结构
+## Introducción del Proyecto
+
+Este proyecto es el trabajo final del curso *Diseño y Fabricación de Instrumentos Inteligentes*, clasificado como **diseño innovador**.
+
+Aborda el problema de que, en el contexto de la pantalla táctil integral en vehículos inteligentes, los conductores se ven obligados a depender de la confirmación visual debido a la falta de retroalimentación háptica, lo que provoca distracción al conducir y riesgos de seguridad. Se diseña un sistema de retroalimentación de fuerza háptica para pantallas táctiles de vehículos inteligentes basado en percepción visotáctil.
+
+### Innovaciones del Diseño
+
+1. **Innovación de escenario**: Transferencia de la tecnología de detección visotáctil desde la inspección industrial al escenario de interacción a bordo
+2. **Innovación funcional**: La dimensión de percepción se expande de "posición" a información tetradimensional: "fuerza + área + velocidad + posición"
+3. **Innovación del sistema**: Construcción de una arquitectura de retroalimentación completa de "capa de percepción → capa de decisión → capa de ejecución"
+
+### Arquitectura del Sistema
+
+```
+Capa de percepción: Cámara microscópica bajo la pantalla + marcado de patrón de moteado en elastómero → Percepción háptica tetradimensional
+       ↓
+Capa de decisión: Algoritmo de mapeo fuerza-sensación háptica + estrategia adaptativa de escenario
+       ↓
+Capa de ejecución: Matriz de actuadores piezoeléctricos + control de retroalimentación → Retroalimentación de fuerza háptica diferenciada
+```
+
+---
+
+## Estructura del Repositorio
 
 ```
 vision-haptic-auto/
-├── README.md                # 项目说明（本文件）
-├── .gitignore               # Git 忽略规则
-├── paper/                   # 论文文档
-│   └── main.md              # Markdown 主文档
-├── figures/                 # 图表资源
-│   ├── fig0_architecture.png    # 系统架构图
-│   ├── fig1_force_haptic_mapping.png  # 力度-触感映射图
-│   ├── fig2_speckle_tracking.png      # 散斑追踪效果图
-│   └── generate_all_figures.py  # 批量生图脚本
-├── simulation/              # 仿真代码
-│   ├── matlab/              # MATLAB 仿真
+├── README.md                # Descripción del proyecto (este archivo)
+├── .gitignore               # Reglas de ignorado de Git
+├── paper/                   # Documento del artículo
+│   └── main.md              # Documento principal en Markdown
+├── figures/                 # Recursos gráficos
+│   ├── fig0_architecture.png    # Diagrama de arquitectura del sistema
+│   ├── fig1_force_haptic_mapping.png  # Mapa de mapeo fuerza-sensación háptica
+│   ├── fig2_speckle_tracking.png      # Resultado del seguimiento de patrón de moteado
+│   └── generate_all_figures.py  # Script de generación por lotes
+├── simulation/              # Código de simulación
+│   ├── matlab/              # Simulación en MATLAB
 │   │   └── force_haptic_mapping.m
-│   └── python/              # Python 仿真
+│   └── python/              # Simulación en Python
 │       └── speckle_tracker.py
-└── references/              # 参考文献
-    └── bibliography.bib     # BibTeX 参考文献
+└── references/              # Referencias bibliográficas
+    └── bibliography.bib     # Referencias en BibTeX
 ```
 
 ---
 
-## 四个为什么
+## Cuatro Por Qués
 
-| 章节 | 关键问题 |
-|------|----------|
-| 一、引言 | **为什么做** — 产业背景、痛点分析、现有不足 |
-| 二、技术现状 | **现有水平** — 电容屏/LRA/压电/视触觉四类技术现状 |
-| 三、方案设计 | **要做什么** — 感知层+决策层+执行层三层架构设计 |
-| 四、预期成果 | **做成什么样** — 性能指标、体验效果、验证方案 |
-| 五、总结 | 回顾与展望 |
-
----
-
-## 预期性能指标
-
-| 指标 | 目标值 |
-|------|--------|
-| 力度感知分辨率 | ≤0.05N |
-| 力度感知范围 | 0.1N ~ 10N |
-| 接触面积分辨率 | ≤1mm² |
-| 反馈响应延迟 | <10ms |
-| 可区分触觉效果 | ≥8种 |
-| 工作温度范围 | -40°C ~ +85°C |
+| Sección | Pregunta Clave |
+|---------|----------------|
+| I. Introducción | **Por qué hacerlo** — Contexto industrial, análisis de problemas, deficiencias actuales |
+| II. Estado del Arte | **Nivel actual** — Estado de cuatro tecnologías: pantalla capacitiva/LRA/actuador piezoeléctrico/visotáctil |
+| III. Diseño de la Solución | **Qué hacer** — Diseño de arquitectura de tres capas: percepción + decisión + ejecución |
+| IV. Resultados Esperados | **Cómo será** — Indicadores de rendimiento, experiencia esperada, plan de validación |
+| V. Conclusión | Revisión y perspectivas |
 
 ---
 
-## 参考文献
+## Indicadores de Rendimiento Esperados
 
-1. 中国汽车工业协会. *中国智能座舱产业发展研究报告*, 2024.
-2. Lee J D, Young K L, Regan M A. Defining driver distraction. In *Driver Distraction: Theory, Effects, and Mitigation*, CRC Press, 2008.
+| Indicador | Valor Objetivo |
+|-----------|----------------|
+| Resolución de percepción de fuerza | ≤0.05 N |
+| Rango de percepción de fuerza | 0.1 N ~ 10 N |
+| Resolución del área de contacto | ≤1 mm² |
+| Latencia de respuesta de retroalimentación | <10 ms |
+| Efectos hápticos distinguibles | ≥8 tipos |
+| Rango de temperatura de funcionamiento | -40 °C ~ +85 °C |
+
+---
+
+## Referencias
+
+1. Asociación China de Fabricantes de Automóviles. *Informe de Investigación sobre la Industria de Cabinas Inteligentes en China*, 2024.
+2. Lee J D, Young K L, Regan M A. Defining driver distraction. En *Driver Distraction: Theory, Effects, and Mitigation*, CRC Press, 2008.
 3. Petermeijer S M, Abbink D A, Mulder M. Haptic feedback in automotive interfaces: A systematic review. *IEEE Trans. on Haptics*, 8(2), 2015.
 4. TDK Corporation. *PowerHap: Piezoelectric Actuators for Haptic Applications*, 2020.
 5. Cirrus Logic. *CS40L25: Piezo Haptic Driver Datasheet*, 2023.
@@ -92,6 +92,6 @@ vision-haptic-auto/
 
 ---
 
-## License
+## Licencia
 
-MIT License — 仅供学术用途
+MIT License — Solo para fines académicos
